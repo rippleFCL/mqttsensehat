@@ -26,8 +26,6 @@ class LedMatrix:
                             func(*func_args)
                         else:
                             print(f"Function {func_name} is not callable or does not exist.")
-                else:
-                    print("Invalid pixel data length. Expected 64 pixels.")
             else:
                 print("Invalid payload format. Expected a list")
         except json.JSONDecodeError:
