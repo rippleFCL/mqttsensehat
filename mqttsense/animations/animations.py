@@ -1,8 +1,12 @@
 from typing import Any, Generator, Protocol
 from .drawables import Drawable, Delay, Fill, Board, PixelGrid
 import math
+import logging
+
+logger = logging.getLogger(__name__)
 
 animation_return = Generator[Drawable | Delay, Any, None]
+
 
 class Animation(Protocol):
     def run(self) -> animation_return: ...
@@ -10,7 +14,7 @@ class Animation(Protocol):
 
 class FillRainbow(Animation):
     def __init__(self, delay: float = 0.1):
-        print(delay)
+        logger.debug(f"FillRainbow initialized with delay: {delay}")
         self.delay = delay
 
     def get_clr_by_angle(self, angle: float) -> int:
@@ -27,6 +31,7 @@ class FillRainbow(Animation):
             yield Fill((red, green, blue))
             yield Delay(self.delay)
 
+
 class RollingRainbow(Animation):
     def __init__(self, delay: float = 0.1, width: int = 8):
         self.delay = delay
@@ -42,11 +47,12 @@ class RollingRainbow(Animation):
                 x = pixle % 8
                 y = pixle // 8
                 offset = (x + y) * self.width
-                red = self.get_clr_by_angle(index+ offset)
-                green = self.get_clr_by_angle(index+offset + 60)
-                blue = self.get_clr_by_angle(index+offset + 120)
+                red = self.get_clr_by_angle(index + offset)
+                green = self.get_clr_by_angle(index + offset + 60)
+                blue = self.get_clr_by_angle(index + offset + 120)
                 board.set_pixel(x, y, (red, green, blue))
             yield PixelGrid(board)
+
 
 class FillColor(Animation):
     def __init__(self, color: tuple[int, int, int]):
@@ -54,6 +60,7 @@ class FillColor(Animation):
 
     def run(self) -> animation_return:
         yield Fill(self.color)
+
 
 class StopAnimation(Animation):
     def run(self) -> animation_return:

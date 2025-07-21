@@ -1,8 +1,11 @@
 import time
 import json
+import logging
 from sense_hat import SenseHat
 from paho.mqtt.client import MQTTMessage
 from .animations import AnimationController, FillColor, StopAnimation, FillRainbow, RollingRainbow
+
+logger = logging.getLogger(__name__)
 
 
 class AnimationHandler:
@@ -22,7 +25,7 @@ class AnimationHandler:
                 animation = self.animations[animation_name]
                 self.controller.set_animation(animation(*args))
             else:
-                print(f"Unknown animation: {animation_name}")
+                logger.warning(f"Unknown animation: {animation_name}")
 
 
 class LedControler:
@@ -33,11 +36,11 @@ class LedControler:
         try:
             payload = json.loads(msg.payload.decode())
             if not isinstance(payload, list):
-                print("Invalid payload format. Expected a list of pixels.")
+                logger.error("Invalid payload format. Expected a list of pixels.")
                 return
             for cmd in payload:
                 if not isinstance(cmd, dict):
-                    print("Invalid command format. Expected a dictionary")
+                    logger.error("Invalid command format. Expected a dictionary")
                     continue
                 for func_name, func_args in cmd.items():
                     if func_name == "delay":
@@ -47,10 +50,10 @@ class LedControler:
                         if callable(func):
                             func(*func_args)
                         else:
-                            print(f"Function {func_name} is not callable or does not exist.")
+                            logger.error(f"Function {func_name} is not callable or does not exist.")
             else:
-                print("Invalid payload format. Expected a list")
+                logger.error("Invalid payload format. Expected a list")
         except json.JSONDecodeError:
-            print("Failed to decode JSON payload.")
+            logger.error("Failed to decode JSON payload.")
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred: {e}")

@@ -3,6 +3,10 @@ from paho.mqtt.client import Client, ConnectFlags, MQTTMessage
 from paho.mqtt.enums import CallbackAPIVersion
 from paho.mqtt.reasoncodes import ReasonCode
 from paho.mqtt.properties import Properties
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Dispatch:
     def __init__(self, base_topic: str):
@@ -28,7 +32,8 @@ class Dispatch:
             callback = self.dispatchers[topic]
             callback(msg)
         else:
-            print(f"No dispatcher registered for topic: {topic}")
+            logger.warning(f"No dispatcher registered for topic: {topic}")
+
 
 class MQTTClient:
     def __init__(self, username: str, password: str, dispatch: Dispatch):
@@ -39,12 +44,13 @@ class MQTTClient:
         self.password = password
         self.dispatch = dispatch
 
-
-    def on_connect(self, client: Client, userdata: Any, flags: ConnectFlags, reason_code: ReasonCode, properties: Properties | None):
+    def on_connect(
+        self, client: Client, userdata: Any, flags: ConnectFlags, reason_code: ReasonCode, properties: Properties | None
+    ):
         if reason_code == 0:
-            print("Connected successfully")
+            logger.info("Connected successfully")
         else:
-            print(f"Connection failed with reason code: {reason_code}")
+            logger.error(f"Connection failed with reason code: {reason_code}")
         for topic in self.dispatch.topics:
             client.subscribe(topic)
 
@@ -52,9 +58,9 @@ class MQTTClient:
         try:
             self.dispatch.on_message(msg)
         except Exception as e:
-            print(f"Error processing message on topic {msg.topic}: {e}")
+            logger.error(f"Error processing message on topic {msg.topic}: {e}")
+
     def connect(self, host: str, port: int = 1883, keepalive: int = 60):
         self.client.username_pw_set(self.username, self.password)
         self.client.connect(host, port, keepalive)
         self.client.loop_forever()
-

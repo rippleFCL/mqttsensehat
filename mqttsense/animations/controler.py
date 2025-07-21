@@ -1,7 +1,11 @@
-from .animations import Animation, animation_return
+from .animations import Animation
 from sense_hat import SenseHat
 from threading import Thread, Event
 from .drawables import Delay
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class AnimationController:
@@ -20,7 +24,6 @@ class AnimationController:
                 continue
             drawable.draw(self.sense)
 
-
     def display_loop(self):
         while True:
             self.next_animation_event.wait()
@@ -31,7 +34,7 @@ class AnimationController:
                 try:
                     self.run_animation(animation)
                 except Exception as e:
-                    print(f"Error running animation: {e}")
+                    logger.error(f"Error running animation: {e}")
 
     def set_animation(self, animation: Animation):
         self.next_animation = animation
