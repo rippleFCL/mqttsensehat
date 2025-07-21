@@ -34,7 +34,7 @@ class AnimationController:
                 try:
                     self.run_animation(animation)
                 except Exception as e:
-                    logger.error(f"Error running animation: {e}")
+                    logger.exception(f"Error running animation: {e}")
 
     def set_animation(self, animation: Animation):
         self.next_animation = animation
