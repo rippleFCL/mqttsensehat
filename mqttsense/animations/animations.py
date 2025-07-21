@@ -33,7 +33,7 @@ class FillRainbow(Animation):
 
 
 class RollingRainbow(Animation):
-    def __init__(self, delay: float = 0.1, width: int = 8):
+    def __init__(self, delay: float = 0.001, width: int = 8):
         self.delay = delay
         self.width = width
 
@@ -42,7 +42,10 @@ class RollingRainbow(Animation):
 
     def run(self) -> animation_return:
         board = Board()
-        for index in range(180):
+        index = 0
+        while True:
+            index += 1
+            index %= 180
             for pixle in range(64):
                 x = pixle % 8
                 y = pixle // 8
