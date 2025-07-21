@@ -17,10 +17,9 @@ class AnimationController:
                 print("No drawable returned from animation.")
                 if self.next_animation_event.wait(drawable.seconds):
                     return
-            elif drawable:
-                drawable.draw(self.sense)
-            else:
-                print("No drawable returned from animation.")
+                continue
+            drawable.draw(self.sense)
+
 
     def display_loop(self):
         while True:
@@ -29,8 +28,10 @@ class AnimationController:
             animation = self.next_animation
             self.next_animation = None
             if animation:
-                self.run_animation(animation)
-
+                try:
+                    self.run_animation(animation)
+                except Exception as e:
+                    print(f"Error running animation: {e}")
     def set_animation(self, animation: Animation):
         self.next_animation = animation
         self.next_animation_event.set()

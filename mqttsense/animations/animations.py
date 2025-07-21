@@ -20,7 +20,7 @@ class FillRainbow(Animation):
             red = self.get_clr_by_angle(i)
             green = self.get_clr_by_angle(i + 60)
             blue = self.get_clr_by_angle(i + 120)
-
+            print((red, green, blue))
             yield Fill((red, green, blue))
             yield Delay(self.delay)
 
