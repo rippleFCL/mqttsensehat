@@ -10,6 +10,7 @@ class Animation(Protocol):
 
 class FillRainbow(Animation):
     def __init__(self, delay: float = 0.1):
+        print(delay)
         self.delay = delay
 
     def get_clr_by_angle(self, angle: float) -> int:
