@@ -3,7 +3,7 @@ import json
 import logging
 from sense_hat import SenseHat
 from paho.mqtt.client import MQTTMessage
-from .animations import AnimationController, FillColor, StopAnimation, FillRainbow, RollingRainbow
+from .animations import AnimationController, FillColor, StopAnimation, FillRainbow, RollingRainbow, FlashAnimation
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,7 @@ class AnimationHandler:
             "fill_rainbow": FillRainbow,
             "fill_color": FillColor,
             "rolling_rainbow": RollingRainbow,
+            "flash_animation": FlashAnimation
         }
 
     def __call__(self, msg: MQTTMessage):

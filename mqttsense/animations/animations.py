@@ -69,3 +69,16 @@ class FillColor(Animation):
 class StopAnimation(Animation):
     def run(self) -> animation_return:
         yield Delay(0)
+
+class FlashAnimation(Animation):
+    def __init__(self, color: tuple[int, int, int] | None = None, delay: float = 0.1):
+        self.color = color or (255, 255, 255)
+        self.delay = delay
+
+    def run(self) -> animation_return:
+        while True:
+            for i in range(510):
+                brightness = int(abs(i-255)/255)
+                yield Fill((self.color[0]*brightness, self.color[1]*brightness, self.color[2]*brightness))
+                yield Delay(self.delay)
+
