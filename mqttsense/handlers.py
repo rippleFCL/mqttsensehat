@@ -16,7 +16,7 @@ class AnimationHandler:
             "fill_rainbow": FillRainbow,
             "fill_color": FillColor,
             "rolling_rainbow": RollingRainbow,
-            "flash_animation": FlashAnimation
+            "flash_color": FlashAnimation
         }
 
     def __call__(self, msg: MQTTMessage):
