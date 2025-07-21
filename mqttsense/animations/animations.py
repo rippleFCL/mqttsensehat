@@ -2,6 +2,7 @@ from typing import Any, Generator, Protocol
 from .drawables import Drawable, Delay, Fill, Board, PixelGrid
 import math
 import logging
+import colorsys
 
 logger = logging.getLogger(__name__)
 
@@ -70,6 +71,7 @@ class StopAnimation(Animation):
     def run(self) -> animation_return:
         yield Delay(0)
 
+
 class FlashAnimation(Animation):
     def __init__(self, color: tuple[int, int, int] | None = None, min_brightness: float = 0, delay: float = 0.1):
         self.color = color or (255, 255, 255)
@@ -77,12 +79,20 @@ class FlashAnimation(Animation):
         self.delay = delay
 
     def set_get_color(self, index: int) -> tuple[int, int, int]:
-        brightness: float = index/255
+        brightness: float = index / 255
         if brightness < self.min_brightness:
             brightness = self.min_brightness
-        red = int(self.color[0] * brightness)
-        green = int(self.color[1] * brightness)
-        blue = int(self.color[2] * brightness)
+
+        # Convert RGB to HSV, adjust brightness, convert back
+        r, g, b = self.color[0] / 255.0, self.color[1] / 255.0, self.color[2] / 255.0
+        h, s, v = colorsys.rgb_to_hsv(r, g, b)
+        v = v * brightness  # Apply brightness to value component only
+        r, g, b = colorsys.hsv_to_rgb(h, s, v)
+
+        red = int(r * 255)
+        green = int(g * 255)
+        blue = int(b * 255)
+
         color = (red, green, blue)
         logger.debug(f"Flashing color: {color}, brightness: {brightness}")
         return color
