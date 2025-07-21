@@ -1,0 +1,21 @@
+[project]
+name = "mqtt-sensehat"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "rippleFCL",email = "github@ripple.contact"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "paho-mqtt (>=2.1.0,<3.0.0)",
+    "sense-hat (>=2.6.0,<3.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)",
+    "pydantic (>=2.11.7,<3.0.0)"
+]
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
