@@ -73,13 +73,16 @@ class StopAnimation(Animation):
 class FlashAnimation(Animation):
     def __init__(self, color: tuple[int, int, int] | None = None, delay: float = 0.1):
         self.color = color or (255, 255, 255)
-        self.delay = delay
+        self.delay = delay<
 
     def run(self) -> animation_return:
         while True:
             for i in range(510):
-                brightness = int(abs(i-255)/255)
-                color = (self.color[0] * brightness, self.color[1] * brightness, self.color[2] * brightness)
+                brightness = abs(i-255)/255
+                red = int(self.color[0] * brightness)
+                green = int(self.color[1] * brightness)
+                blue = int(self.color[2] * brightness)
+                color = (red, green, blue)
                 logger.debug(f"Flashing color: {color}, brightness: {brightness}")
                 yield Fill(color)
                 yield Delay(self.delay)
