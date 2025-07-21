@@ -73,7 +73,7 @@ class StopAnimation(Animation):
 class FlashAnimation(Animation):
     def __init__(self, color: tuple[int, int, int] | None = None, delay: float = 0.1):
         self.color = color or (255, 255, 255)
-        self.delay = delay<
+        self.delay = delay
 
     def run(self) -> animation_return:
         while True:
