@@ -2,7 +2,7 @@ import time
 import json
 from sense_hat import SenseHat
 from paho.mqtt.client import MQTTMessage
-from .animations import AnimationController, FillColor, StopAnimation, FillRainbow
+from .animations import AnimationController, FillColor, StopAnimation, FillRainbow, RollingRainbow
 
 
 class AnimationHandler:
@@ -11,7 +11,8 @@ class AnimationHandler:
         self.animations = {
             "stop": StopAnimation,
             "fill_rainbow": FillRainbow,
-            "fill_color": FillColor
+            "fill_color": FillColor,
+            "rolling_rainbow": RollingRainbow,
         }
 
     def __call__(self, msg: MQTTMessage):
