@@ -13,7 +13,7 @@ class Config(BaseModel):
     base_topic: str
 
 
-with open("config.yaml", "r") as f:
+with open("config.yml", "r") as f:
     config = Config.model_validate(yaml.safe_load(f))
 
 led_matrix = LedMatrix()
