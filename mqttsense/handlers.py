@@ -2,7 +2,7 @@ import time
 import json
 from sense_hat import SenseHat
 from paho.mqtt.client import MQTTMessage
-from .animations import AnimationController, StopAnimation, FillRainbow
+from .animations import AnimationController, FillColor, StopAnimation, FillRainbow
 
 
 class AnimationHandler:
@@ -10,16 +10,18 @@ class AnimationHandler:
         self.controller = AnimationController()
         self.animations = {
             "stop": StopAnimation(),
-            "fill_rainbow": FillRainbow()
+            "fill_rainbow": FillRainbow(),
+            "fill_color": FillColor()
         }
 
     def __call__(self, msg: MQTTMessage):
-        animation_name = msg.payload.decode()
-        if animation_name in self.animations:
-            animation = self.animations[animation_name]
-            self.controller.set_animation(animation)
-        else:
-            print(f"Unknown animation: {animation_name}")
+        payload = json.loads(msg.payload.decode())
+        for animation_name, args in payload.items():
+            if animation_name in self.animations:
+                animation = self.animations[animation_name]
+                self.controller.set_animation(animation, *args)
+            else:
+                print(f"Unknown animation: {animation_name}")
 
 
 class LedControler:
