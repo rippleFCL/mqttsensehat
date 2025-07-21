@@ -1,3 +1,4 @@
+import time
 from sense_hat import SenseHat
 import json
 from paho.mqtt.client import MQTTMessage
@@ -17,11 +18,14 @@ class LedMatrix:
                     print("Invalid command format. Expected a dictionary")
                     continue
                 for func_name, func_args in cmd.items():
-                    func = getattr(self.sense, func_name, None)
-                    if callable(func):
-                        func(*func_args)
+                    if func_name == "delay":
+                        time.sleep(*func_args)
                     else:
-                        print(f"Function {func_name} is not callable or does not exist.")
+                        func = getattr(self.sense, func_name, None)
+                        if callable(func):
+                            func(*func_args)
+                        else:
+                            print(f"Function {func_name} is not callable or does not exist.")
                 else:
                     print("Invalid pixel data length. Expected 64 pixels.")
             else:
