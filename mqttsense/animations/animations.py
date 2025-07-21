@@ -16,7 +16,7 @@ class FillRainbow(Animation):
         return int(255 * abs((math.sin(math.radians(angle)))))
 
     def run(self) -> Generator[Fill | Delay, Any, None]:
-        for i in range(90):
+        for i in range(180):
             red = self.get_clr_by_angle(i)
             green = self.get_clr_by_angle(i + 60)
             blue = self.get_clr_by_angle(i + 120)
