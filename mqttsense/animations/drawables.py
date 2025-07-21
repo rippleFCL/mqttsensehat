@@ -35,8 +35,8 @@ class Board:
             self.pixels[y][x] = color
 
     @property
-    def pixel_list(self) -> list[tuple[int, int, tuple[int, int, int]]]:
-        return [(x, y, self.pixels[y][x]) for y in range(8) for x in range(8)]
+    def pixel_list(self) -> list[tuple[int, int, int]]:
+        return [(self.pixels[y][x]) for y in range(8) for x in range(8)]
 
 
 class PixelGrid(Drawable):
