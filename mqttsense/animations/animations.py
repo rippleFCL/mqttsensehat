@@ -88,7 +88,7 @@ class FlashAnimation(Animation):
         return color
 
     def run(self) -> animation_return:
-        min_index = int(255 - (self.min_brightness * 255))
+        min_index = int(self.min_brightness * 255)
         while True:
             for i in range(255, min_index, -1):
                 yield Fill(self.set_get_color(i))
