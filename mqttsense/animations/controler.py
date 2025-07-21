@@ -7,13 +7,13 @@ from .drawables import Delay
 class AnimationController:
     def __init__(self):
         self.sense = SenseHat()
-        self.next_animation: animation_return | None = None
+        self.next_animation: Animation | None = None
         self.next_animation_event = Event()
         self.display_thread = Thread(target=self.display_loop, daemon=True)
         self.display_thread.start()
 
-    def run_animation(self, animation: animation_return):
-        for drawable in animation:
+    def run_animation(self, animation: Animation):
+        for drawable in animation.run():
             if isinstance(drawable, Delay):
                 if self.next_animation_event.wait(drawable.seconds):
                     return
@@ -33,6 +33,6 @@ class AnimationController:
                 except Exception as e:
                     print(f"Error running animation: {e}")
 
-    def set_animation(self, animation: Animation, *args):
-        self.next_animation = animation.run(*args)
+    def set_animation(self, animation: Animation):
+        self.next_animation = animation
         self.next_animation_event.set()

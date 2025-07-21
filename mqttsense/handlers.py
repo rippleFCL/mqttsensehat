@@ -9,9 +9,9 @@ class AnimationHandler:
     def __init__(self):
         self.controller = AnimationController()
         self.animations = {
-            "stop": StopAnimation(),
-            "fill_rainbow": FillRainbow(),
-            "fill_color": FillColor()
+            "stop": StopAnimation,
+            "fill_rainbow": FillRainbow,
+            "fill_color": FillColor
         }
 
     def __call__(self, msg: MQTTMessage):
@@ -19,7 +19,7 @@ class AnimationHandler:
         for animation_name, args in payload.items():
             if animation_name in self.animations:
                 animation = self.animations[animation_name]
-                self.controller.set_animation(animation, *args)
+                self.controller.set_animation(animation(*args))
             else:
                 print(f"Unknown animation: {animation_name}")
 
