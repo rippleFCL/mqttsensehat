@@ -52,6 +52,7 @@ class RollingRainbow(Animation):
                 blue = self.get_clr_by_angle(index + offset + 120)
                 board.set_pixel(x, y, (red, green, blue))
             yield PixelGrid(board)
+            yield Delay(self.delay)
 
 
 class FillColor(Animation):
