@@ -49,8 +49,10 @@ class MQTTClient:
             client.subscribe(topic)
 
     def on_message(self, client: Client, userdata: Any, msg: MQTTMessage):
-        self.dispatch.on_message(msg)
-
+        try:
+            self.dispatch.on_message(msg)
+        except Exception as e:
+            print(f"Error processing message on topic {msg.topic}: {e}")
     def connect(self, host: str, port: int = 1883, keepalive: int = 60):
         self.client.username_pw_set(self.username, self.password)
         self.client.connect(host, port, keepalive)
