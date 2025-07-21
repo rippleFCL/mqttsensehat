@@ -79,6 +79,8 @@ class FlashAnimation(Animation):
         while True:
             for i in range(510):
                 brightness = int(abs(i-255)/255)
-                yield Fill((self.color[0]*brightness, self.color[1]*brightness, self.color[2]*brightness))
+                color = (self.color[0] * brightness, self.color[1] * brightness, self.color[2] * brightness)
+                logger.debug(f"Flashing color: {color}, brightness: {brightness}")
+                yield Fill(color)
                 yield Delay(self.delay)
 
