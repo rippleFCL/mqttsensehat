@@ -1,9 +1,28 @@
 import time
-from sense_hat import SenseHat
 import json
+from sense_hat import SenseHat
 from paho.mqtt.client import MQTTMessage
+from .animations import AnimationController, StopAnimation, FillRainbow
 
-class LedMatrix:
+
+class AnimationHandler:
+    def __init__(self):
+        self.controller = AnimationController()
+        self.animations = {
+            "stop": StopAnimation(),
+            "fill_rainbow": FillRainbow()
+        }
+
+    def __call__(self, msg: MQTTMessage):
+        animation_name = msg.payload.decode()
+        if animation_name in self.animations:
+            animation = self.animations[animation_name]
+            self.controller.set_animation(animation)
+        else:
+            print(f"Unknown animation: {animation_name}")
+
+
+class LedControler:
     def __init__(self):
         self.sense = SenseHat()
 
