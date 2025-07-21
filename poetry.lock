@@ -415,6 +415,23 @@ files = [
 ]
 
 [[package]]
+name = "RTIMULib"
+version = "7.2.1"
+description = "richards-tech IMU Sensor Fusion Library"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = []
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/RPi-Distro/RTIMULib.git"
+reference = "HEAD"
+resolved_reference = "b949681af69b45f0f7f4bb53b6770037b5b02178"
+subdirectory = "Linux/python"
+
+[[package]]
 name = "sense-hat"
 version = "2.6.0"
 description = "Python module to control the Raspberry Pi Sense HAT, originally used in the Astro Pi mission"
@@ -460,4 +477,4 @@ typing-extensions = ">=4.12.0"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10"
-content-hash = "8b4ef9c897ae50f25cc1bf7bd7df4350669ab186e3497d75128131f5ee4f1cb0"
+content-hash = "e8fa1be2dc7a0c875c0e901dbf07dbf2381834eac3a12e98d424a171723e264f"
