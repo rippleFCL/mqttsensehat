@@ -76,17 +76,23 @@ class FlashAnimation(Animation):
         self.min_brightness = min_brightness
         self.delay = delay
 
-    def run(self) -> animation_return:
-        while True:
-            for i in range(510):
-                brightness = abs(i-255)/255
-                if brightness < self.min_brightness:
-                    brightness = self.min_brightness
-                red = int(self.color[0] * brightness)
-                green = int(self.color[1] * brightness)
-                blue = int(self.color[2] * brightness)
-                color = (red, green, blue)
-                logger.debug(f"Flashing color: {color}, brightness: {brightness}")
-                yield Fill(color)
-                yield Delay(self.delay)
+    def set_get_color(self, index: int) -> tuple[int, int, int]:
+        brightness: float = index/255
+        if brightness < self.min_brightness:
+            brightness = self.min_brightness
+        red = int(self.color[0] * brightness)
+        green = int(self.color[1] * brightness)
+        blue = int(self.color[2] * brightness)
+        color = (red, green, blue)
+        logger.debug(f"Flashing color: {color}, brightness: {brightness}")
+        return color
 
+    def run(self) -> animation_return:
+        min_index = int(255 - (self.min_brightness * 255))
+        while True:
+            for i in range(255, min_index, -1):
+                yield Fill(self.set_get_color(i))
+                yield Delay(self.delay)
+            for i in range(min_index, 255):
+                yield Fill(self.set_get_color(i))
+                yield Delay(self.delay)
