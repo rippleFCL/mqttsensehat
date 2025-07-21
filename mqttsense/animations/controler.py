@@ -14,7 +14,6 @@ class AnimationController:
     def run_animation(self, animation: Animation):
         for drawable in animation.run():
             if isinstance(drawable, Delay):
-                print("No drawable returned from animation.")
                 if self.next_animation_event.wait(drawable.seconds):
                     return
                 continue

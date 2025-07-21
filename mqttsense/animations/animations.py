@@ -13,7 +13,7 @@ class FillRainbow(Animation):
         self.delay = delay
 
     def get_clr_by_angle(self, angle: float) -> int:
-        return int(255 * (math.sin(math.radians(angle))))
+        return int(255 * abs((math.sin(math.radians(angle)))))
 
     def run(self) -> Generator[Fill | Delay, Any, None]:
         for i in range(90):
