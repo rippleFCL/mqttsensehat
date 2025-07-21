@@ -1,5 +1,9 @@
 from typing import Protocol
+from venv import logger
 from sense_hat import SenseHat
+import logging
+
+logger  = logging.getLogger(__name__)
 
 class Drawable(Protocol):
     def draw(self, sense: SenseHat) -> None:
@@ -40,6 +44,7 @@ class PixelGrid(Drawable):
         self.pixels = pixels
 
     def draw(self, sense: SenseHat) -> None:
+        logger.debug(self.pixels.pixel_list)
         sense.set_pixels(self.pixels.pixel_list)
 
 class Delay:
