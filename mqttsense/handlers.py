@@ -133,26 +133,27 @@ class EffectHandler(Handler):
         payload = json.loads(msg.payload.decode())
         state = payload.get("state", self.state.state)
         brightness = payload.get("brightness", self.state.brightness)
-        effect_name = payload.get("effect", "none")
-        color = payload.get("color", self.state.rgb)
-
-        self.state.state = state
+        effect_name = payload.get("effect", None)
+        color = payload.get("color", None)
         self.state.brightness = brightness
-        self.state.effect = effect_name
-        self.state.rgb = color
+        self.state.state = state
 
         logger.debug(f"EffectHandler received message: {payload}")
         logger.debug(f"EffectHandler state: {self.state.state}, brightness: {self.state.brightness}, effect: {self.state.effect}, color: {self.state.rgb}")
         self.controller.brightness = brightness/255
-        if effect_name != "none":
+        if effect_name:
+            self.state.effect = effect_name
+
             if effect_name in self._effects:
                 effect = self._effects[effect_name]
                 self.controller.set_animation(effect)
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
-        elif state == "ON":
+        elif color:
+            self.state.rgb = color
+            self.state.effect = "none"
             self.controller.set_animation(FillColor((color["r"], color["g"], color["b"])))
-        else:
+        elif state == "OFF":
             self.state.state = "OFF"
             logger.debug("Turning off led")
             self.controller.set_animation(FillColor((0, 0, 0)))
