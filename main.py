@@ -36,7 +36,7 @@ animation_controller = AnimationController()
 
 state_handler = StateHandler()
 effect_handler = EffectHandler(animation_controller, state_handler)
-ha_auto_discovery = HAAutoDescovery(effect_handler, state_handler)
+ha_auto_discovery = HAAutoDescovery(config.device_name,effect_handler, state_handler)
 andimation_handler = AnimationHandler(animation_controller)
 led_matrix = LedHandler()
 
