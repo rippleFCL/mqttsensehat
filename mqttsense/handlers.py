@@ -155,6 +155,7 @@ class HAAutoDescovery(Handler):
         return json.dumps(config)
 
     def on_startup(self, client: Client, subscriber: Subscriber):
+        logger.info("HAAutoDescovery initialized")
         client.publish("homeassistant/light/mqttsense/sensehat01/config", self.get_config(subscriber))
 
 
