@@ -9,14 +9,22 @@ logger = logging.getLogger(__name__)
 animation_return = Generator[Drawable | Delay, Any, None]
 
 
+def scale_brightness(color: tuple[int, int, int], brightness: float) -> tuple[int, int, int]:
+    r, g, b = color[0] / 255.0, color[1] / 255.0, color[2] / 255.0
+    h, s, v = colorsys.rgb_to_hsv(r, g, b)
+    v = v * brightness  # Apply brightness to value component only
+    r, g, b = colorsys.hsv_to_rgb(h, s, v)
+    return int(r * 255), int(g * 255), int(b * 255)
+
 class Animation(Protocol):
     def run(self) -> animation_return: ...
 
 
 class FillRainbow(Animation):
-    def __init__(self, delay: float = 0.1):
+    def __init__(self, delay: float = 0.1, brightness: float = 1.0):
         logger.debug(f"FillRainbow initialized with delay: {delay}")
         self.delay = delay
+        self.brightness = brightness
 
     def get_clr_by_angle(self, angle: float) -> int:
         return int(255 * abs((math.sin(math.radians(angle)))))
@@ -29,14 +37,15 @@ class FillRainbow(Animation):
             red = self.get_clr_by_angle(index)
             green = self.get_clr_by_angle(index + 60)
             blue = self.get_clr_by_angle(index + 120)
-            yield Fill((red, green, blue))
+            yield Fill(scale_brightness((red, green, blue), self.brightness))
             yield Delay(self.delay)
 
 
 class RollingRainbow(Animation):
-    def __init__(self, delay: float = 0.001, width: int = 8):
+    def __init__(self, delay: float = 0.001, width: int = 8, brightness: float = 1.0):
         self.delay = delay
         self.width = width
+        self.brightness = brightness
 
     def get_clr_by_angle(self, angle: float) -> int:
         return int(255 * abs((math.sin(math.radians(angle)))))
@@ -54,7 +63,7 @@ class RollingRainbow(Animation):
                 red = self.get_clr_by_angle(index + offset)
                 green = self.get_clr_by_angle(index + offset + 60)
                 blue = self.get_clr_by_angle(index + offset + 120)
-                board.set_pixel(x, y, (red, green, blue))
+                board.set_pixel(x, y, scale_brightness((red, green, blue), self.brightness))
             yield PixelGrid(board)
             yield Delay(self.delay)
 
@@ -84,14 +93,7 @@ class FlashAnimation(Animation):
             brightness = self.min_brightness
 
         # Convert RGB to HSV, adjust brightness, convert back
-        r, g, b = self.color[0] / 255.0, self.color[1] / 255.0, self.color[2] / 255.0
-        h, s, v = colorsys.rgb_to_hsv(r, g, b)
-        v = v * brightness  # Apply brightness to value component only
-        r, g, b = colorsys.hsv_to_rgb(h, s, v)
-
-        red = int(r * 255)
-        green = int(g * 255)
-        blue = int(b * 255)
+        red, green, blue = scale_brightness(self.color, brightness)
 
         color = (red, green, blue)
         logger.debug(f"Flashing color: {color}, brightness: {brightness}")
