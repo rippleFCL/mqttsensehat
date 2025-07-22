@@ -126,7 +126,7 @@ class EffectHandler(Handler):
             self.controller.set_animation(FillColor((255, 255, 255), brightness))
         else:
             self.state.state = "OFF"
-            self.controller.set_animation(StopAnimation())
+            self.controller.set_animation(FillColor((0, 0, 0)))
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         subscriber.subscribe(self.topic)
