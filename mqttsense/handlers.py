@@ -4,7 +4,15 @@ import json
 import logging
 from sense_hat import SenseHat
 from paho.mqtt.client import MQTTMessage, Client
-from .animations import AnimationController, FillColor, FillRainbow, RollingRainbow, FlashAnimation
+from .animations import (
+    AnimationController,
+    FillColor,
+    FillRainbow,
+    RollingRainbow,
+    FlashAnimation,
+    FlashAnimationFast,
+    RollingRainbowFast,
+)
 from .mqtt import Handler, Subscriber
 
 logger = logging.getLogger(__name__)
@@ -44,7 +52,6 @@ class StateHandler(Handler):
         self._state = value
         if old_state != value:
             self.publish_state()
-
 
     @property
     def brightness(self) -> int:
@@ -92,7 +99,7 @@ class StateHandler(Handler):
             "effect": self.effect,  # current effect name
             "color": self._rgb,  # current RGB color
         }
-        self.client.publish(self.subscriber.full_topic(self.topic), json.dumps(state_payload))
+        self.client.publish(self.subscriber.full_topic(self.topic), json.dumps(state_payload), retain=True)
 
     def publish_availability(self, status: str = "online"):
         """Publish availability status (online/offline)"""
@@ -120,14 +127,16 @@ class EffectHandler(Handler):
         self.topic = "effect"
         self._effects = {
             "Rolling rainbow": RollingRainbow(),
+            "Rolling rainbow fast": RollingRainbowFast(),
         }
         self._color_effects = {
             "Flash color": FlashAnimation,
+            "Flash color fast": FlashAnimationFast,
         }
 
     @property
     def effects(self) -> list[str]:
-        return list(self._effects.keys())+list(self._color_effects.keys())
+        return list(self._effects.keys()) + list(self._color_effects.keys())
 
     def on_message(self, msg: MQTTMessage):
         payload = json.loads(msg.payload.decode())
@@ -139,8 +148,10 @@ class EffectHandler(Handler):
         self.state.state = state
 
         logger.debug(f"EffectHandler received message: {payload}")
-        logger.debug(f"EffectHandler state: {self.state.state}, brightness: {self.state.brightness}, effect: {self.state.effect}, color: {self.state.rgb}")
-        self.controller.brightness = brightness/255
+        logger.debug(
+            f"EffectHandler state: {self.state.state}, brightness: {self.state.brightness}, effect: {self.state.effect}, color: {self.state.rgb}"
+        )
+        self.controller.brightness = brightness / 255
         if effect_name:
             self.state.effect = effect_name
 
@@ -203,7 +214,7 @@ class HAAutoDescovery(Handler):
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         logger.info("HAAutoDescovery initialized")
-        client.publish("homeassistant/light/mqttsense/sensehat01/config", self.get_config(subscriber))
+        client.publish("homeassistant/light/mqttsense/sensehat01/config", self.get_config(subscriber), retain=True)
 
 
 class AnimationHandler(Handler):

@@ -60,6 +60,11 @@ class RollingRainbow(Animation):
             yield PixelGrid(board)
             yield Delay(self.delay)
 
+class RollingRainbowFast(RollingRainbow):
+    def __init__(self, delay: float = 0.01, width: int = 5):
+        super().__init__(delay, width)
+
+
 
 class FillColor(Animation):
     def __init__(self, color: tuple[int, int, int]):
@@ -98,3 +103,7 @@ class FlashAnimation(Animation):
             for i in range(min_index, 255):
                 yield Fill(self.set_get_color(i))
                 yield Delay(self.delay)
+
+class FlashAnimationFast(FlashAnimation):
+    def __init__(self, color: tuple[int, int, int] | None = None):
+        super().__init__(color, min_brightness=0.3, delay=0.0005)
