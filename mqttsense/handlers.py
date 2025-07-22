@@ -148,6 +148,7 @@ class HAAutoDescovery(Handler):
             "state_topic": sub.full_topic(self.state_handler.topic),
             "brightness_command_topic": sub.full_topic(self.effect_handler.topic),
             "effect_command_topic": sub.full_topic(self.effect_handler.topic),
+            "rgb_command_topic": sub.full_topic(self.effect_handler.topic),
             "effect_list": self.effect_handler.effects,
             "availability_topic": sub.full_topic(self.state_handler.availability_topic),
             "payload_available": "online",
@@ -155,6 +156,7 @@ class HAAutoDescovery(Handler):
             "schema": "json",
             "brightness": True,
             "effect": True,
+            "rgb": True,
             "dev": {
                 "ids": ["mqttsense"],
                 "name": "MQTT SenseHat",
