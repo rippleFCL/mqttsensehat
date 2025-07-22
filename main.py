@@ -14,6 +14,7 @@ class Config(BaseModel):
     password: str
     host: str
     base_topic: str
+    device_name: str
     log_level: str = "INFO"
 
 

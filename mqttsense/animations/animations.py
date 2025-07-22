@@ -16,7 +16,7 @@ class Animation(Protocol):
 
 
 class FillRainbow(Animation):
-    def __init__(self, delay: float = 0.1):
+    def __init__(self, delay: float = 0.05):
         logger.debug(f"FillRainbow initialized with delay: {delay}")
         self.delay = delay
 
@@ -34,6 +34,9 @@ class FillRainbow(Animation):
             yield Fill((red, green, blue))
             yield Delay(self.delay)
 
+class FillRainbowFast(FillRainbow):
+    def __init__(self, delay: float = 0.01):
+        super().__init__(delay)
 
 class RollingRainbow(Animation):
     def __init__(self, delay: float = 0.05, width: int = 5):

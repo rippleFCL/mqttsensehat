@@ -12,10 +12,15 @@ from .animations import (
     FlashAnimation,
     FlashAnimationFast,
     RollingRainbowFast,
+    FillRainbowFast
 )
 from .mqtt import Handler, Subscriber
+import fcntl
+import socket
+import struct
 
 logger = logging.getLogger(__name__)
+
 
 
 class StateHandler(Handler):
@@ -128,6 +133,8 @@ class EffectHandler(Handler):
         self._effects = {
             "Rolling rainbow": RollingRainbow(),
             "Rolling rainbow fast": RollingRainbowFast(),
+            "Fill rainbow": FillRainbow(),
+            "Fill rainbow fast": FillRainbowFast(),
         }
         self._color_effects = {
             "Flash color": FlashAnimation,
@@ -180,9 +187,26 @@ class EffectHandler(Handler):
 
 
 class HAAutoDescovery(Handler):
-    def __init__(self, effect_handler: EffectHandler, state_handler: StateHandler):
+    def __init__(self, device_name: str, effect_handler: EffectHandler, state_handler: StateHandler):
+        self.device_name = device_name
         self.effect_handler = effect_handler
         self.state_handler = state_handler
+
+    @staticmethod
+    def get_mac_address() -> str:
+        """Get the MAC address of the primary network interface."""
+        try:
+            for iface in socket.if_nameindex():
+                iface_name = iface[1]
+                try:
+                    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                    info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack("256s", bytes(iface_name, "utf-8")[:15]))
+                    return ':'.join('%02x' % b for b in info[18:24])
+                except Exception:
+                    continue
+        except Exception as e:
+            logger.error(f"Failed to get MAC address: {e}")
+        return "00:00:00:00:00:00"
 
     def on_message(self, msg: MQTTMessage): ...
 
@@ -204,17 +228,19 @@ class HAAutoDescovery(Handler):
             "supported_color_modes": ["rgb"],
             "dev": {
                 "ids": ["mqttsense"],
-                "name": "MQTT SenseHat",
+                "name": self.device_name,
                 "manufacturer": "Raspberry Pi Foundation",
                 "model": "Sense HAT",
             },
-            "unique_id": "sensehat01",
+            "unique_id": self.get_mac_address(),
         }
         return json.dumps(config)
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         logger.info("HAAutoDescovery initialized")
-        client.publish("homeassistant/light/mqttsense/sensehat01/config", self.get_config(subscriber), retain=True)
+        client.publish(
+            f"homeassistant/light/mqttsense/{self.get_mac_address()}/config", self.get_config(subscriber), retain=True
+        )
 
 
 class AnimationHandler(Handler):

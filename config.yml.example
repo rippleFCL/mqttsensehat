@@ -2,4 +2,4 @@ username: "blah"
 password: "blah"
 host: "10.0.0.0"
 base_topic: "upstairs/bedroom/sensehat01"
-
+device_name: "sensehat"
