@@ -164,6 +164,10 @@ class EffectHandler(Handler):
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         subscriber.subscribe(self.topic)
+        self.state.rgb = {"r": 255, "g": 255, "b": 255}  # Default color
+        self.state.brightness = 255  # Default brightness
+        self.controller.brightness = 1  # Default brightness scale
+        self.controller.set_animation(FillColor((255, 255, 255)))  # Default animation
 
 
 class HAAutoDescovery(Handler):

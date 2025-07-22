@@ -15,7 +15,7 @@ class AnimationController:
         self.next_animation_event = Event()
         self.display_thread = Thread(target=self.display_loop, daemon=True)
         self.display_thread.start()
-        self.brightness = 1
+        self.brightness: float = 1
 
     def run_animation(self, animation: Animation):
         for drawable in animation.run():
