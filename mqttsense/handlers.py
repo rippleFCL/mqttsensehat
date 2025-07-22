@@ -114,6 +114,7 @@ class EffectHandler(Handler):
         state = payload.get("state", "OFF")
         brightness = payload.get("brightness", 255)
         effect_name = payload.get("effect", None)
+        logger.debug(f"EffectHandler received message: {payload}")
         if effect_name:
             if effect_name in self._effects:
                 effect = self._effects[effect_name]
@@ -126,6 +127,7 @@ class EffectHandler(Handler):
             self.controller.set_animation(FillColor((255, 255, 255), brightness))
         else:
             self.state.state = "OFF"
+            logger.debug("Turning off led")
             self.controller.set_animation(FillColor((0, 0, 0)))
 
     def on_startup(self, client: Client, subscriber: Subscriber):
