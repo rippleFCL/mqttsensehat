@@ -69,11 +69,12 @@ class RollingRainbow(Animation):
 
 
 class FillColor(Animation):
-    def __init__(self, color: tuple[int, int, int]):
+    def __init__(self, color: tuple[int, int, int], brightness: float = 255):
         self.color = color
+        self.brightness = brightness/255
 
     def run(self) -> animation_return:
-        yield Fill(self.color)
+        yield Fill(scale_brightness(self.color, self.brightness))
 
 
 class StopAnimation(Animation):

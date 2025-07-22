@@ -110,14 +110,23 @@ class EffectHandler(Handler):
         return list(self._effects.keys())
 
     def on_message(self, msg: MQTTMessage):
-        print(msg.payload.decode())
         payload = json.loads(msg.payload.decode())
-        for effect_name, args in payload.items():
+        state = payload.get("state", "OFF")
+        brightness = payload.get("brightness", 255)
+        effect_name = payload.get("effect", None)
+        if effect_name:
             if effect_name in self.effects:
                 effect = self.effects[effect_name]
                 self.controller.set_animation(effect)
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
+        elif state == "ON":
+            self.state.state = "ON"
+            self.state.brightness = brightness
+            self.controller.set_animation(FillColor((255, 255, 255), brightness))
+        else:
+            self.state.state = "OFF"
+            self.controller.set_animation(StopAnimation())
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         subscriber.subscribe(self.topic)
