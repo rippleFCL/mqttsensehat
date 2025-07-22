@@ -7,8 +7,8 @@ Type=simple
 User=pi
 #Group=GROUP
 # Edit paths if different than default
-WorkingDirectory = /home/pi/rpi-sensehat-mqtt/
-ExecStart=/usr/bin/python3 rpi_sensehat_mqtt.py
+WorkingDirectory = /home/pi/mqttsensehat/
+ExecStart=.venv/bin/python3 rpi_sensehat_mqtt.py
 # Restart options
 Restart=always
 RestartSec=15
