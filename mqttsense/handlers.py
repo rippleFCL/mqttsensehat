@@ -4,7 +4,7 @@ import json
 import logging
 from sense_hat import SenseHat
 from paho.mqtt.client import MQTTMessage, Client
-from .animations import AnimationController, FillColor, StopAnimation, FillRainbow, RollingRainbow, FlashAnimation
+from .animations import AnimationController, FillColor, FillRainbow, RollingRainbow, FlashAnimation
 from .mqtt import Handler, Subscriber
 
 logger = logging.getLogger(__name__)
@@ -119,10 +119,10 @@ class EffectHandler(Handler):
         self.state = state
         self.topic = "effect"
         self._effects = {
-            "stop": StopAnimation(),
-            "fill_rainbow": FillRainbow(),
-            "rolling_rainbow": RollingRainbow(),
-            "flash_color": FlashAnimation(),
+            "Rolling rainbow": RollingRainbow(),
+        }
+        self._color_effects = {
+            "Flash color": FlashAnimation,
         }
 
     @property
@@ -147,6 +147,10 @@ class EffectHandler(Handler):
             if effect_name in self._effects:
                 effect = self._effects[effect_name]
                 self.controller.set_animation(effect)
+            elif effect_name in self._color_effects:
+                effect = self._color_effects[effect_name]
+                color_data = (self.state.rgb["r"], self.state.rgb["g"], self.state.rgb["b"])
+                self.controller.set_animation(effect(color=color_data))
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
         elif color:
