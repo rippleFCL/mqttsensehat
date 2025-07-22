@@ -22,6 +22,17 @@ class StateHandler(Handler):
         self._effect = "off"  # Default effect name
 
     @property
+    def rgb(self) -> dict[str, int]:
+        return self._rgb
+
+    @rgb.setter
+    def rgb(self, value: dict[str, int]):
+        old_rgb = self._rgb
+        self._rgb = value
+        if old_rgb != value:
+            self.publish_state()
+
+    @property
     def state(self) -> str:
         return self._state
 
@@ -29,8 +40,11 @@ class StateHandler(Handler):
     def state(self, value: str):
         if value not in ["ON", "OFF"]:
             raise ValueError("State must be 'ON' or 'OFF'")
+        old_state = self._state
         self._state = value
-        self.publish_state()
+        if old_state != value:
+            self.publish_state()
+
 
     @property
     def brightness(self) -> int:
@@ -40,8 +54,10 @@ class StateHandler(Handler):
     def brightness(self, value: int):
         if not (0 <= value <= 255):
             raise ValueError("Brightness must be between 0 and 255")
+        old_brightness = self._brightness
         self._brightness = value
-        self.publish_state()
+        if old_brightness != value:
+            self.publish_state()
 
     @property
     def effect(self) -> str:
@@ -49,8 +65,10 @@ class StateHandler(Handler):
 
     @effect.setter
     def effect(self, value: str):
+        old_effect = self._effect
         self._effect = value
-        self.publish_state()
+        if old_effect != value:
+            self.publish_state()
 
     @property
     def client(self) -> Client:
@@ -115,19 +133,23 @@ class EffectHandler(Handler):
         payload = json.loads(msg.payload.decode())
         state = payload.get("state", self.state.state)
         brightness = payload.get("brightness", self.state.brightness)
-        effect_name = payload.get("effect", self.state.effect)
+        effect_name = payload.get("effect", "none")
+        color = payload.get("color", self.state.rgb)
+
+        self.state.state = state
+        self.state.brightness = brightness
+        self.state.effect = effect_name
+        self.state.rgb = color
+
         logger.debug(f"EffectHandler received message: {payload}")
-        if effect_name:
+        logger.debug(f"EffectHandler state: {self.state.state}, brightness: {self.state.brightness}, effect: {self.state.effect}, color: {self.state.rgb}")
+        if effect_name != "none":
             if effect_name in self._effects:
                 effect = self._effects[effect_name]
                 self.controller.set_animation(effect)
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
         elif state == "ON":
-            color = payload.get("color", {"r": 255, "g": 255, "b": 255})
-
-            self.state.state = "ON"
-            self.state.brightness = brightness
             self.controller.set_animation(FillColor((color["r"], color["g"], color["b"]), brightness))
         else:
             self.state.state = "OFF"
