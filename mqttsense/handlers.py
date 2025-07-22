@@ -115,8 +115,8 @@ class EffectHandler(Handler):
         brightness = payload.get("brightness", 255)
         effect_name = payload.get("effect", None)
         if effect_name:
-            if effect_name in self.effects:
-                effect = self.effects[effect_name]
+            if effect_name in self._effects:
+                effect = self._effects[effect_name]
                 self.controller.set_animation(effect)
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
