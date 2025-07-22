@@ -127,7 +127,7 @@ class EffectHandler(Handler):
 
     @property
     def effects(self) -> list[str]:
-        return list(self._effects.keys())
+        return list(self._effects.keys())+list(self._color_effects.keys())
 
     def on_message(self, msg: MQTTMessage):
         payload = json.loads(msg.payload.decode())
