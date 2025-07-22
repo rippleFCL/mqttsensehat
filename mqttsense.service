@@ -1,0 +1,20 @@
+[Unit]
+Description=SenseHAT MQTT client
+After=network-online.target
+
+[Service]
+Type=simple
+User=pi
+#Group=GROUP
+# Edit paths if different than default
+WorkingDirectory = /home/pi/rpi-sensehat-mqtt/
+ExecStart=/usr/bin/python3 rpi_sensehat_mqtt.py
+# Restart options
+Restart=always
+RestartSec=15
+# Tell how systemd should kill this process
+KillMode=process
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
