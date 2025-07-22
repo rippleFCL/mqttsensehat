@@ -15,6 +15,7 @@ class AnimationController:
         self.next_animation_event = Event()
         self.display_thread = Thread(target=self.display_loop, daemon=True)
         self.display_thread.start()
+        self.brightness = 1
 
     def run_animation(self, animation: Animation):
         for drawable in animation.run():
@@ -22,7 +23,7 @@ class AnimationController:
                 if self.next_animation_event.wait(drawable.seconds):
                     return
                 continue
-            drawable.draw(self.sense)
+            drawable.draw(self.sense, self.brightness)
 
     def display_loop(self):
         while True:
