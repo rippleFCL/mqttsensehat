@@ -122,9 +122,11 @@ class EffectHandler(Handler):
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
         elif state == "ON":
+            color = payload.get("color", {"r": 255, "g": 255, "b": 255})
+
             self.state.state = "ON"
             self.state.brightness = brightness
-            self.controller.set_animation(FillColor((255, 255, 255), brightness))
+            self.controller.set_animation(FillColor((color["r"], color["g"], color["b"]), brightness))
         else:
             self.state.state = "OFF"
             logger.debug("Turning off led")
