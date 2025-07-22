@@ -36,7 +36,7 @@ class FillRainbow(Animation):
 
 
 class RollingRainbow(Animation):
-    def __init__(self, delay: float = 0.001, width: int = 8):
+    def __init__(self, delay: float = 0.05, width: int = 5):
         self.delay = delay
         self.width = width
 
@@ -72,7 +72,7 @@ class FillColor(Animation):
 
 
 class FlashAnimation(Animation):
-    def __init__(self, color: tuple[int, int, int] | None = None, min_brightness: float = 0.3, delay: float = 0.05):
+    def __init__(self, color: tuple[int, int, int] | None = None, min_brightness: float = 0.3, delay: float = 0.005):
         self.color = color or (255, 255, 255)
         self.min_brightness = min_brightness
         self.delay = delay
