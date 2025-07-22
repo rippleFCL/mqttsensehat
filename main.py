@@ -1,6 +1,8 @@
 
+from bdb import effective
 from mqttsense.mqtt import Dispatch, MQTTClient
-from mqttsense.handlers import LedControler, AnimationHandler
+from mqttsense.animations import AnimationController
+from mqttsense.handlers import LedHandler, AnimationHandler, EffectHandler
 import yaml
 from pydantic import BaseModel
 import logging
@@ -30,14 +32,15 @@ formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 console_handler.setFormatter(formatter)
 root_logger.addHandler(console_handler)
 
-
-led_matrix = LedControler()
-andimation_handler = AnimationHandler()
+animation_controller = AnimationController()
+led_matrix = LedHandler()
+andimation_handler = AnimationHandler(animation_controller)
+effect_handler = EffectHandler(animation_controller)
 
 
 dispatch = Dispatch(config.base_topic)
-dispatch.register("led/cmd", led_matrix)
-dispatch.register("animation/cmd", andimation_handler)
+dispatch.register(led_matrix)
+dispatch.register(andimation_handler)
 
 
 client = MQTTClient(config.username, config.password, dispatch)
