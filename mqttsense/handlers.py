@@ -16,6 +16,7 @@ class StateHandler(Handler):
         self._subscriber: Subscriber | None = None
         self.topic = "state"
         self.availability_topic = "availability"
+        self._rgb = {"r": 255, "g": 255, "b": 255}
         self._state = "OFF"
         self._brightness = 255  # Default brightness value
         self._effect = "off"  # Default effect name
@@ -71,6 +72,7 @@ class StateHandler(Handler):
             "state": self.state,  # or "OFF" based on your logic
             "brightness": self.brightness,  # current brightness value
             "effect": self.effect,  # current effect name
+            "color": self._rgb,  # current RGB color
         }
         self.client.publish(self.subscriber.full_topic(self.topic), json.dumps(state_payload))
 
@@ -111,9 +113,9 @@ class EffectHandler(Handler):
 
     def on_message(self, msg: MQTTMessage):
         payload = json.loads(msg.payload.decode())
-        state = payload.get("state", "OFF")
-        brightness = payload.get("brightness", 255)
-        effect_name = payload.get("effect", None)
+        state = payload.get("state", self.state.state)
+        brightness = payload.get("brightness", self.state.brightness)
+        effect_name = payload.get("effect", self.state.effect)
         logger.debug(f"EffectHandler received message: {payload}")
         if effect_name:
             if effect_name in self._effects:
