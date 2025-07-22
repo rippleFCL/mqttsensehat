@@ -72,7 +72,7 @@ class FillColor(Animation):
 
 
 class FlashAnimation(Animation):
-    def __init__(self, color: tuple[int, int, int] | None = None, min_brightness: float = 0.3, delay: float = 0.005):
+    def __init__(self, color: tuple[int, int, int] | None = None, min_brightness: float = 0.3, delay: float = 0.001):
         self.color = color or (255, 255, 255)
         self.min_brightness = min_brightness
         self.delay = delay
