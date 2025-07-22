@@ -143,6 +143,7 @@ class EffectHandler(Handler):
 
         logger.debug(f"EffectHandler received message: {payload}")
         logger.debug(f"EffectHandler state: {self.state.state}, brightness: {self.state.brightness}, effect: {self.state.effect}, color: {self.state.rgb}")
+        self.controller.brightness = brightness
         if effect_name != "none":
             if effect_name in self._effects:
                 effect = self._effects[effect_name]
@@ -150,7 +151,7 @@ class EffectHandler(Handler):
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
         elif state == "ON":
-            self.controller.set_animation(FillColor((color["r"], color["g"], color["b"]), brightness))
+            self.controller.set_animation(FillColor((color["r"], color["g"], color["b"])))
         else:
             self.state.state = "OFF"
             logger.debug("Turning off led")
