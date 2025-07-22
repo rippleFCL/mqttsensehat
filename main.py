@@ -1,8 +1,7 @@
 
-from bdb import effective
 from mqttsense.mqtt import Dispatch, MQTTClient
 from mqttsense.animations import AnimationController
-from mqttsense.handlers import LedHandler, AnimationHandler, EffectHandler
+from mqttsense.handlers import HAAutoDescovery, LedHandler, AnimationHandler, EffectHandler, StateHandler
 import yaml
 from pydantic import BaseModel
 import logging
@@ -33,14 +32,20 @@ console_handler.setFormatter(formatter)
 root_logger.addHandler(console_handler)
 
 animation_controller = AnimationController()
-led_matrix = LedHandler()
+
+state_handler = StateHandler()
+effect_handler = EffectHandler(animation_controller, state_handler)
+ha_auto_discovery = HAAutoDescovery(effect_handler, state_handler)
 andimation_handler = AnimationHandler(animation_controller)
-effect_handler = EffectHandler(animation_controller)
+led_matrix = LedHandler()
 
 
 dispatch = Dispatch(config.base_topic)
 dispatch.register(led_matrix)
 dispatch.register(andimation_handler)
+dispatch.register(effect_handler)
+dispatch.register(state_handler)
+dispatch.register(ha_auto_discovery)
 
 
 client = MQTTClient(config.username, config.password, dispatch)
