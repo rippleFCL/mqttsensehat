@@ -210,7 +210,6 @@ class AnimationHandler(Handler):
     def __init__(self, controller: AnimationController):
         self.controller = controller
         self.animations = {
-            "stop": StopAnimation,
             "fill_rainbow": FillRainbow,
             "fill_color": FillColor,
             "rolling_rainbow": RollingRainbow,
