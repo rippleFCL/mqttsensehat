@@ -156,7 +156,7 @@ class HAAutoDescovery(Handler):
             "schema": "json",
             "brightness": True,
             "effect": True,
-            "rgb": True,
+            "supported_color_modes": ["rgb"],
             "dev": {
                 "ids": ["mqttsense"],
                 "name": "MQTT SenseHat",
