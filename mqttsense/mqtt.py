@@ -30,8 +30,8 @@ class Dispatch:
 
     def on_message(self, msg: MQTTMessage):
         topic = msg.topic
-        if topic in self.dispatchers:
-            handler = self.dispatchers[topic]
+        if topic in self.topic_dispatcher:
+            handler = self.topic_dispatcher[topic]
             handler.on_message(msg)
         else:
             logger.warning(f"No dispatcher registered for topic: {topic}")
@@ -39,6 +39,7 @@ class Dispatch:
     def on_connect(self, client: Client):
         for dispatcher in self.dispatchers:
             subscriber = Subscriber(client, self, dispatcher, self.base_topic)
+            logger.info(f"Starting handler: {dispatcher.__class__.__name__}")
             dispatcher.on_startup(client, subscriber)
 
 
