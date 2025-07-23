@@ -174,7 +174,7 @@ class EffectHandler(Handler):
         if state == "OFF":
             self.state.state = "OFF"
             logger.debug("Turning off led")
-            self.controller.set_animation(FillColor((0, 0, 0)))
+            self.controller.brightness = 0
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         subscriber.subscribe(self.topic)
