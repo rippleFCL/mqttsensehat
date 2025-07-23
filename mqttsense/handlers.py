@@ -1,7 +1,3 @@
-from ast import Sub
-import fcntl
-import socket
-import struct
 import time
 import json
 import logging
@@ -192,22 +188,6 @@ class HAAutoDescovery(Handler):
         self.effect_handler = effect_handler
         self.state_handler = state_handler
 
-    @staticmethod
-    def get_mac_address() -> str:
-        """Get the MAC address of the primary network interface."""
-        try:
-            for iface in socket.if_nameindex():
-                iface_name = iface[1]
-                try:
-                    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                    info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack("256s", bytes(iface_name, "utf-8")[:15]))
-                    return ":".join("%02x" % b for b in info[18:24])
-                except Exception:
-                    continue
-        except Exception as e:
-            logger.error(f"Failed to get MAC address: {e}")
-        return "00:00:00:00:00:00"
-
     def to_ha_id(self):
         """Convert a name to a Home Assistant compatible ID."""
         return self.device_name.lower().replace(" ", "_").replace("-", "_")
@@ -216,7 +196,7 @@ class HAAutoDescovery(Handler):
 
     def get_config(self, sub: Subscriber) -> str:
         config = {
-            "name": "SenseHat LED Matrix",
+            "name": self.device_name,
             "command_topic": sub.full_topic(self.effect_handler.topic),
             "state_topic": sub.full_topic(self.state_handler.topic),
             "brightness_command_topic": sub.full_topic(self.effect_handler.topic),
@@ -232,10 +212,11 @@ class HAAutoDescovery(Handler):
             "supported_color_modes": ["rgb"],
             "dev": {
                 "ids": [self.get_mac_address()],
-                "name": self.device_name,
+                "name": "SenseHat LED Matrix",
                 "manufacturer": "Raspberry Pi Foundation",
                 "model": "Sense HAT",
             },
+            "unique_id": f"{self.to_ha_id()}_led_matrix",
         }
         return json.dumps(config)
 
