@@ -10,6 +10,7 @@ from .animations import (
 from .controler import AnimationController
 
 __all__ = [
+    "AnimationController",
     "FillColor",
     "FillRainbow",
     "FillRainbowFast",
@@ -17,5 +18,4 @@ __all__ = [
     "FlashAnimationFast",
     "RollingRainbow",
     "RollingRainbowFast",
-    "AnimationController",
 ]
