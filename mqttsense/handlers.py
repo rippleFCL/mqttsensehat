@@ -211,7 +211,7 @@ class HAAutoDescovery(Handler):
             "effect": True,
             "supported_color_modes": ["rgb"],
             "dev": {
-                "ids": [self.get_mac_address()],
+                "ids": [self.to_ha_id()],
                 "name": "SenseHat LED Matrix",
                 "manufacturer": "Raspberry Pi Foundation",
                 "model": "Sense HAT",
