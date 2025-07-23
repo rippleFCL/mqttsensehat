@@ -1,6 +1,8 @@
-from typing import Protocol
-from sense_hat import SenseHat
 import logging
+from typing import Protocol
+
+from sense_hat import SenseHat
+
 from .utils import scale_brightness
 
 logger = logging.getLogger(__name__)
@@ -33,7 +35,9 @@ class Pixel(Drawable):
 
 class Board:
     def __init__(self):
-        self.pixels: list[list[tuple[int, int, int]]] = [[(0, 0, 0) for _ in range(8)] for _ in range(8)]
+        self.pixels: list[list[tuple[int, int, int]]] = [
+            [(0, 0, 0) for _ in range(8)] for _ in range(8)
+        ]
 
     def set_pixel(self, x: int, y: int, color: tuple[int, int, int]):
         if 0 <= x < 8 and 0 <= y < 8:
@@ -50,7 +54,9 @@ class PixelGrid(Drawable):
 
     def draw(self, sense: SenseHat, brightness: float) -> None:
         # Scale brightness for all pixels
-        scaled_pixels = [scale_brightness(pixel, brightness) for pixel in self.pixels.pixel_list]
+        scaled_pixels = [
+            scale_brightness(pixel, brightness) for pixel in self.pixels.pixel_list
+        ]
         logger.debug(scaled_pixels)
         sense.set_pixels(scaled_pixels)
 

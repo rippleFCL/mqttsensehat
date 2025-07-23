@@ -1,6 +1,9 @@
 import colorsys
 
-def scale_brightness(color: tuple[int, int, int], brightness: float) -> tuple[int, int, int]:
+
+def scale_brightness(
+    color: tuple[int, int, int], brightness: float
+) -> tuple[int, int, int]:
     r, g, b = color[0] / 255.0, color[1] / 255.0, color[2] / 255.0
     h, s, v = colorsys.rgb_to_hsv(r, g, b)
     v = v * brightness  # Apply brightness to value component only

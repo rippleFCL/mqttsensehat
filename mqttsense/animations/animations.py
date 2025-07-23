@@ -1,14 +1,13 @@
-from typing import Any, Generator, Protocol
-from .drawables import Drawable, Delay, Fill, Board, PixelGrid
-import math
 import logging
+import math
+from typing import Any, Generator, Protocol
+
+from .drawables import Board, Delay, Drawable, Fill, PixelGrid
 from .utils import scale_brightness
 
 logger = logging.getLogger(__name__)
 
 animation_return = Generator[Drawable | Delay, Any, None]
-
-
 
 
 class Animation(Protocol):
@@ -34,9 +33,11 @@ class FillRainbow(Animation):
             yield Fill((red, green, blue))
             yield Delay(self.delay)
 
+
 class FillRainbowFast(FillRainbow):
     def __init__(self, delay: float = 0.01):
         super().__init__(delay)
+
 
 class RollingRainbow(Animation):
     def __init__(self, delay: float = 0.05, width: int = 5):
@@ -63,10 +64,10 @@ class RollingRainbow(Animation):
             yield PixelGrid(board)
             yield Delay(self.delay)
 
+
 class RollingRainbowFast(RollingRainbow):
     def __init__(self, delay: float = 0.01, width: int = 5):
         super().__init__(delay, width)
-
 
 
 class FillColor(Animation):
@@ -80,7 +81,12 @@ class FillColor(Animation):
 
 
 class FlashAnimation(Animation):
-    def __init__(self, color: tuple[int, int, int] | None = None, min_brightness: float = 0.3, delay: float = 0.001):
+    def __init__(
+        self,
+        color: tuple[int, int, int] | None = None,
+        min_brightness: float = 0.3,
+        delay: float = 0.001,
+    ):
         self.color = color or (255, 255, 255)
         self.min_brightness = min_brightness
         self.delay = delay
@@ -106,6 +112,7 @@ class FlashAnimation(Animation):
             for i in range(min_index, 255):
                 yield Fill(self.set_get_color(i))
                 yield Delay(self.delay)
+
 
 class FlashAnimationFast(FlashAnimation):
     def __init__(self, color: tuple[int, int, int] | None = None):

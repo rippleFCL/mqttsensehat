@@ -1,12 +1,17 @@
-
-from mqttsense.mqtt import Dispatch, MQTTClient
-from mqttsense.animations import AnimationController
-from mqttsense.handlers import HAAutoDescovery, LedHandler, AnimationHandler, EffectHandler, StateHandler
-import yaml
-from pydantic import BaseModel
 import logging
 
+import yaml
+from pydantic import BaseModel
 
+from mqttsense.animations import AnimationController
+from mqttsense.handlers import (
+    AnimationHandler,
+    EffectHandler,
+    HAAutoDescovery,
+    LedHandler,
+    StateHandler,
+)
+from mqttsense.mqtt import Dispatch, MQTTClient
 
 
 class Config(BaseModel):
@@ -16,9 +21,6 @@ class Config(BaseModel):
     base_topic: str
     device_name: str
     log_level: str = "INFO"
-
-
-
 
 
 with open("config.yml", "r") as f:
@@ -36,7 +38,7 @@ animation_controller = AnimationController()
 
 state_handler = StateHandler()
 effect_handler = EffectHandler(animation_controller, state_handler)
-ha_auto_discovery = HAAutoDescovery(config.device_name,effect_handler, state_handler)
+ha_auto_discovery = HAAutoDescovery(config.device_name, effect_handler, state_handler)
 andimation_handler = AnimationHandler(animation_controller)
 led_matrix = LedHandler()
 

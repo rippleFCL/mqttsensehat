@@ -1,22 +1,23 @@
-import time
 import json
 import logging
+import time
+
+from paho.mqtt.client import Client, MQTTMessage
 from sense_hat import SenseHat
-from paho.mqtt.client import MQTTMessage, Client
+
 from .animations import (
     AnimationController,
     FillColor,
     FillRainbow,
-    RollingRainbow,
+    FillRainbowFast,
     FlashAnimation,
     FlashAnimationFast,
+    RollingRainbow,
     RollingRainbowFast,
-    FillRainbowFast
 )
 from .mqtt import Handler, Subscriber
 
 logger = logging.getLogger(__name__)
-
 
 
 class StateHandler(Handler):
@@ -100,11 +101,17 @@ class StateHandler(Handler):
             "effect": self.effect,  # current effect name
             "color": self._rgb,  # current RGB color
         }
-        self.client.publish(self.subscriber.full_topic(self.topic), json.dumps(state_payload), retain=True)
+        self.client.publish(
+            self.subscriber.full_topic(self.topic),
+            json.dumps(state_payload),
+            retain=True,
+        )
 
     def publish_availability(self, status: str = "online"):
         """Publish availability status (online/offline)"""
-        self.client.publish(self.subscriber.full_topic(self.availability_topic), status, retain=True)
+        self.client.publish(
+            self.subscriber.full_topic(self.availability_topic), status, retain=True
+        )
         logger.info(f"Published availability: {status}")
 
     def on_startup(self, client: Client, subscriber: Subscriber):
@@ -112,7 +119,12 @@ class StateHandler(Handler):
         self._subscriber = subscriber
 
         # Set Last Will and Testament for availability
-        client.will_set(topic=subscriber.full_topic(self.availability_topic), payload="offline", qos=1, retain=True)
+        client.will_set(
+            topic=subscriber.full_topic(self.availability_topic),
+            payload="offline",
+            qos=1,
+            retain=True,
+        )
 
         # Publish that we're online
         self.publish_availability("online")
@@ -158,7 +170,9 @@ class EffectHandler(Handler):
         if color:
             self.state.rgb = color
             self.state.effect = "none"
-            self.controller.set_animation(FillColor((color["r"], color["g"], color["b"])))
+            self.controller.set_animation(
+                FillColor((color["r"], color["g"], color["b"]))
+            )
         if effect_name:
             self.state.effect = effect_name
 
@@ -167,7 +181,11 @@ class EffectHandler(Handler):
                 self.controller.set_animation(effect)
             elif effect_name in self._color_effects:
                 effect = self._color_effects[effect_name]
-                color_data = (self.state.rgb["r"], self.state.rgb["g"], self.state.rgb["b"])
+                color_data = (
+                    self.state.rgb["r"],
+                    self.state.rgb["g"],
+                    self.state.rgb["b"],
+                )
                 self.controller.set_animation(effect(color=color_data))
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
@@ -183,7 +201,12 @@ class EffectHandler(Handler):
 
 
 class HAAutoDescovery(Handler):
-    def __init__(self, device_name: str, effect_handler: EffectHandler, state_handler: StateHandler):
+    def __init__(
+        self,
+        device_name: str,
+        effect_handler: EffectHandler,
+        state_handler: StateHandler,
+    ):
         self.device_name = device_name
         self.effect_handler = effect_handler
         self.state_handler = state_handler
@@ -222,7 +245,11 @@ class HAAutoDescovery(Handler):
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         logger.info("HAAutoDescovery initialized")
-        client.publish(f"homeassistant/light/mqttsense/{self.to_ha_id()}/config", self.get_config(subscriber), retain=True)
+        client.publish(
+            f"homeassistant/light/mqttsense/{self.to_ha_id()}/config",
+            self.get_config(subscriber),
+            retain=True,
+        )
 
 
 class AnimationHandler(Handler):
@@ -274,7 +301,9 @@ class LedHandler(Handler):
                         if callable(func):
                             func(*func_args)
                         else:
-                            logger.error(f"Function {func_name} is not callable or does not exist.")
+                            logger.error(
+                                f"Function {func_name} is not callable or does not exist."
+                            )
             else:
                 logger.error("Invalid payload format. Expected a list")
         except json.JSONDecodeError:

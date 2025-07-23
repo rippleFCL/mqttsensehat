@@ -1,11 +1,10 @@
-from typing import Any
+import logging
+from typing import Any, Protocol
+
 from paho.mqtt.client import Client, ConnectFlags, MQTTMessage
 from paho.mqtt.enums import CallbackAPIVersion
-from paho.mqtt.reasoncodes import ReasonCode
 from paho.mqtt.properties import Properties
-import logging
-from typing import Protocol
-
+from paho.mqtt.reasoncodes import ReasonCode
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +43,9 @@ class Dispatch:
 
 
 class Subscriber:
-    def __init__(self, client: Client, dispatch: Dispatch, handler: Handler, base_topic: str):
+    def __init__(
+        self, client: Client, dispatch: Dispatch, handler: Handler, base_topic: str
+    ):
         self.client = client
         self.dispatch = dispatch
         self.handler = handler
@@ -57,12 +58,17 @@ class Subscriber:
         full_topic = self.full_topic(topic)
         self.client.subscribe(full_topic)
         self.dispatch.subscribe(full_topic, self.handler)
-        logger.info(f"Handler {self.handler.__class__.__name__} Subscribed to topic: {full_topic}")
+        logger.info(
+            f"Handler {self.handler.__class__.__name__} Subscribed to topic: {full_topic}"
+        )
 
     def subscribe_full(self, full_topic: str):
         self.client.subscribe(full_topic)
         self.dispatch.subscribe(full_topic, self.handler)
-        logger.info(f"Handler {self.handler.__class__.__name__} Subscribed to full topic: {full_topic}")
+        logger.info(
+            f"Handler {self.handler.__class__.__name__} Subscribed to full topic: {full_topic}"
+        )
+
 
 class MQTTClient:
     def __init__(self, username: str, password: str, dispatch: Dispatch):
@@ -74,7 +80,12 @@ class MQTTClient:
         self.dispatch = dispatch
 
     def on_connect(
-        self, client: Client, userdata: Any, flags: ConnectFlags, reason_code: ReasonCode, properties: Properties | None
+        self,
+        client: Client,
+        userdata: Any,
+        flags: ConnectFlags,
+        reason_code: ReasonCode,
+        properties: Properties | None,
     ):
         if reason_code == 0:
             logger.info("Connected successfully")

@@ -1,9 +1,10 @@
-from .animations import Animation
-from sense_hat import SenseHat
-from threading import Thread, Event
-from .drawables import Delay
 import logging
+from threading import Event, Thread
 
+from sense_hat import SenseHat
+
+from .animations import Animation
+from .drawables import Delay
 
 logger = logging.getLogger(__name__)
 
