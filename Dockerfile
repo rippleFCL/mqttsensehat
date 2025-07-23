@@ -25,8 +25,8 @@ WORKDIR /app
 
 COPY --from=requirement-builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 
-COPY mqttsense/ .
-COPY main.py .
+COPY mqttsense/ /app/mqttsense
+COPY main.py /app
 
 USER 1000:1000
 
