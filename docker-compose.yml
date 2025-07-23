@@ -1,0 +1,9 @@
+services:
+  mqtt_sensehat:
+    build: ghcr.io/rippleFCL/mqtt-sensehat:latest
+    container_name: mqtt_sensehat
+    restart: unless-stopped
+    devices:
+      - /dev/gpiomem:/dev/gpiomem
+    volumes:
+      - ./config.yml:/app/config.yaml
