@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.3] - 2025-07-23
+### :bug: Bug Fixes
+- [`0904c80`](https://github.com/rippleFCL/mqttsensehat/commit/0904c802c5a2b0d94f13992a0fe2e09f472e1518) - permission issues *(commit by [@rippleFCL](https://github.com/rippleFCL))*
+
+
 ## [v1.0.2] - 2025-07-23
 ### :bug: Bug Fixes
 - [`85afe65`](https://github.com/rippleFCL/mqttsensehat/commit/85afe6589e53de075eb4e3cf9e4ce3f00cc85be6) - horrible gid uid tings *(commit by [@rippleFCL](https://github.com/rippleFCL))*
@@ -19,3 +24,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [v1.0.1]: https://github.com/rippleFCL/mqttsensehat/compare/v1.0.0...v1.0.1
 [v1.0.2]: https://github.com/rippleFCL/mqttsensehat/compare/v1.0.1...v1.0.2
+[v1.0.3]: https://github.com/rippleFCL/mqttsensehat/compare/v1.0.2...v1.0.3
