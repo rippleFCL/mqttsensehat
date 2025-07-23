@@ -14,23 +14,23 @@ class Drawable(Protocol):
 
 
 class Fill(Drawable):
-    def __init__(self, color: tuple[int, int, int]):
-        self.color = color
+    def __init__(self, colour: tuple[int, int, int]):
+        self.colour = colour
 
     def draw(self, sense: SenseHat, brightness: float) -> None:
-        scaled_color = scale_brightness(self.color, brightness)
-        sense.clear(scaled_color)
+        scaled_colour = scale_brightness(self.colour, brightness)
+        sense.clear(scaled_colour)
 
 
 class Pixel(Drawable):
-    def __init__(self, x: int, y: int, color: tuple[int, int, int]):
+    def __init__(self, x: int, y: int, colour: tuple[int, int, int]):
         self.x = x
         self.y = y
-        self.color = color
+        self.colour = colour
 
     def draw(self, sense: SenseHat, brightness: float) -> None:
-        scaled_color = scale_brightness(self.color, brightness)
-        sense.set_pixel(self.x, self.y, scaled_color)
+        scaled_colour = scale_brightness(self.colour, brightness)
+        sense.set_pixel(self.x, self.y, scaled_colour)
 
 
 class Board:
@@ -39,9 +39,9 @@ class Board:
             [(0, 0, 0) for _ in range(8)] for _ in range(8)
         ]
 
-    def set_pixel(self, x: int, y: int, color: tuple[int, int, int]):
+    def set_pixel(self, x: int, y: int, colour: tuple[int, int, int]):
         if 0 <= x < 8 and 0 <= y < 8:
-            self.pixels[y][x] = color
+            self.pixels[y][x] = colour
 
     @property
     def pixel_list(self) -> list[tuple[int, int, int]]:

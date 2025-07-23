@@ -1,5 +1,5 @@
 from .animations import (
-    FillColor,
+    FillColour,
     FillRainbow,
     FillRainbowFast,
     FlashAnimation,
@@ -11,7 +11,7 @@ from .controler import AnimationController
 
 __all__ = [
     "AnimationController",
-    "FillColor",
+    "FillColour",
     "FillRainbow",
     "FillRainbowFast",
     "FlashAnimation",

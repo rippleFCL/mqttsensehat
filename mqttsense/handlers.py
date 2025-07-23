@@ -1,13 +1,11 @@
 import json
 import logging
-import time
 
 from paho.mqtt.client import Client, MQTTMessage
-from sense_hat import SenseHat
 
 from .animations import (
     AnimationController,
-    FillColor,
+    FillColour,
     FillRainbow,
     FillRainbowFast,
     FlashAnimation,
@@ -144,34 +142,34 @@ class EffectHandler(Handler):
             "Fill rainbow": FillRainbow(),
             "Fill rainbow fast": FillRainbowFast(),
         }
-        self._color_effects = {
-            "Flash color": FlashAnimation,
-            "Flash color fast": FlashAnimationFast,
+        self._colour_effects = {
+            "Flash colour": FlashAnimation,
+            "Flash colour fast": FlashAnimationFast,
         }
 
     @property
     def effects(self) -> list[str]:
-        return list(self._effects.keys()) + list(self._color_effects.keys())
+        return list(self._effects.keys()) + list(self._colour_effects.keys())
 
     def on_message(self, msg: MQTTMessage):
         payload = json.loads(msg.payload.decode())
         state = payload.get("state", self.state.state)
         brightness = payload.get("brightness", self.state.brightness)
         effect_name = payload.get("effect", None)
-        color = payload.get("color", None)
+        colour = payload.get("colour", None)
         self.state.brightness = brightness
         self.state.state = state
 
         logger.debug(f"EffectHandler received message: {payload}")
         logger.debug(
-            f"EffectHandler state: {self.state.state}, brightness: {self.state.brightness}, effect: {self.state.effect}, color: {self.state.rgb}"
+            f"EffectHandler state: {self.state.state}, brightness: {self.state.brightness}, effect: {self.state.effect}, colour: {self.state.rgb}"
         )
         self.controller.brightness = brightness / 255
-        if color:
-            self.state.rgb = color
+        if colour:
+            self.state.rgb = colour
             self.state.effect = "none"
             self.controller.set_animation(
-                FillColor((color["r"], color["g"], color["b"]))
+                FillColour((colour["r"], colour["g"], colour["b"]))
             )
         if effect_name:
             self.state.effect = effect_name
@@ -179,14 +177,14 @@ class EffectHandler(Handler):
             if effect_name in self._effects:
                 effect = self._effects[effect_name]
                 self.controller.set_animation(effect)
-            elif effect_name in self._color_effects:
-                effect = self._color_effects[effect_name]
-                color_data = (
+            elif effect_name in self._colour_effects:
+                effect = self._colour_effects[effect_name]
+                colour_data = (
                     self.state.rgb["r"],
                     self.state.rgb["g"],
                     self.state.rgb["b"],
                 )
-                self.controller.set_animation(effect(color=color_data))
+                self.controller.set_animation(effect(colour=colour_data))
             else:
                 logger.warning(f"Unknown effect: {effect_name}")
         if state == "OFF":
@@ -197,10 +195,10 @@ class EffectHandler(Handler):
     def on_startup(self, client: Client, subscriber: Subscriber):
         subscriber.subscribe(self.topic)
         self.controller.brightness = 0
-        self.controller.set_animation(FillColor((255, 255, 255)))  # Default animation
+        self.controller.set_animation(FillColour((255, 255, 255)))  # Default animation
 
 
-class HAAutoDescovery(Handler):
+class HAAutoDiscovery(Handler):
     def __init__(
         self,
         device_name: str,
@@ -244,7 +242,7 @@ class HAAutoDescovery(Handler):
         return json.dumps(config)
 
     def on_startup(self, client: Client, subscriber: Subscriber):
-        logger.info("HAAutoDescovery initialized")
+        logger.info("HAAutoDiscovery initialized")
         client.publish(
             f"homeassistant/light/mqttsense/{self.to_ha_id()}/config",
             self.get_config(subscriber),
@@ -259,9 +257,9 @@ class AnimationHandler(Handler):
         self.controller = controller
         self.animations = {
             "fill_rainbow": FillRainbow,
-            "fill_color": FillColor,
+            "fill_colour": FillColour,
             "rolling_rainbow": RollingRainbow,
-            "flash_color": FlashAnimation,
+            "flash_colour": FlashAnimation,
         }
 
     def on_message(self, msg: MQTTMessage):
@@ -275,41 +273,3 @@ class AnimationHandler(Handler):
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         subscriber.subscribe("animation/cmd")
-
-
-class LedHandler(Handler):
-    topic = "led/cmd"
-
-    def __init__(self):
-        self.sense = SenseHat()
-
-    def on_message(self, msg: MQTTMessage):
-        try:
-            payload = json.loads(msg.payload.decode())
-            if not isinstance(payload, list):
-                logger.error("Invalid payload format. Expected a list of pixels.")
-                return
-            for cmd in payload:
-                if not isinstance(cmd, dict):
-                    logger.error("Invalid command format. Expected a dictionary")
-                    continue
-                for func_name, func_args in cmd.items():
-                    if func_name == "delay":
-                        time.sleep(*func_args)
-                    else:
-                        func = getattr(self.sense, func_name, None)
-                        if callable(func):
-                            func(*func_args)
-                        else:
-                            logger.error(
-                                f"Function {func_name} is not callable or does not exist."
-                            )
-            else:
-                logger.error("Invalid payload format. Expected a list")
-        except json.JSONDecodeError:
-            logger.error("Failed to decode JSON payload.")
-        except Exception as e:
-            logger.error(f"An error occurred: {e}")
-
-    def on_startup(self, client: Client, subscriber: Subscriber):
-        subscriber.subscribe("led/cmd")

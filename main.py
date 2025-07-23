@@ -7,8 +7,7 @@ from mqttsense.animations import AnimationController
 from mqttsense.handlers import (
     AnimationHandler,
     EffectHandler,
-    HAAutoDescovery,
-    LedHandler,
+    HAAutoDiscovery,
     StateHandler,
 )
 from mqttsense.mqtt import Dispatch, MQTTClient
@@ -21,6 +20,7 @@ class Config(BaseModel):
     base_topic: str
     device_name: str
     log_level: str = "INFO"
+    ha_discovery: bool = False
 
 
 with open("config.yml", "r") as f:
@@ -38,17 +38,19 @@ animation_controller = AnimationController()
 
 state_handler = StateHandler()
 effect_handler = EffectHandler(animation_controller, state_handler)
-ha_auto_discovery = HAAutoDescovery(config.device_name, effect_handler, state_handler)
-andimation_handler = AnimationHandler(animation_controller)
-led_matrix = LedHandler()
+animation_handler = AnimationHandler(animation_controller)
 
 
 dispatch = Dispatch(config.base_topic)
-dispatch.register(led_matrix)
-dispatch.register(andimation_handler)
+dispatch.register(animation_handler)
 dispatch.register(effect_handler)
 dispatch.register(state_handler)
-dispatch.register(ha_auto_discovery)
+
+if config.ha_discovery:
+    ha_auto_discovery = HAAutoDiscovery(
+        config.device_name, effect_handler, state_handler
+    )
+    dispatch.register(ha_auto_discovery)
 
 
 client = MQTTClient(config.username, config.password, dispatch)

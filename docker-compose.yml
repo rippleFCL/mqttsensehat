@@ -3,7 +3,6 @@ services:
     build: ghcr.io/rippleFCL/mqtt-sensehat:latest
     container_name: mqtt_sensehat
     restart: unless-stopped
-    devices:
-      - /dev/gpiomem:/dev/gpiomem
+    privileged: true
     volumes:
-      - ./config.yml:/app/config.yaml
+      - ./config.yml:/app/config.yml
