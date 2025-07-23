@@ -23,7 +23,7 @@ jobs:
     secrets: inherit
   build:
     needs: lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     permissions:
       packages: write
       contents: read
