@@ -17,7 +17,12 @@ env:
   IMAGE_NAME: mqtt-sensehat
 
 jobs:
+  lint:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
   build:
+    needs: lint
     runs-on: ubuntu-latest
     permissions:
       packages: write
