@@ -20,14 +20,16 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 FROM python:3.13-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1
-
+ENV UID=1000
+ENV GID=1000
 WORKDIR /app
 
 COPY --from=requirement-builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 
 COPY mqttsense/ /app/mqttsense
 COPY main.py /app
+COPY entrypoint.sh /app
 
-USER 1000:1000
+RUN chmod +x /app/entrypoint.sh
 
-ENTRYPOINT [ "python3", "main.py" ]
+ENTRYPOINT [ "/app/entrypoint.sh" ]
