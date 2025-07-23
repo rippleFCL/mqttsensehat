@@ -1,4 +1,7 @@
 from ast import Sub
+import fcntl
+import socket
+import struct
 import time
 import json
 import logging
@@ -15,9 +18,6 @@ from .animations import (
     FillRainbowFast
 )
 from .mqtt import Handler, Subscriber
-import fcntl
-import socket
-import struct
 
 logger = logging.getLogger(__name__)
 
@@ -201,12 +201,16 @@ class HAAutoDescovery(Handler):
                 try:
                     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                     info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack("256s", bytes(iface_name, "utf-8")[:15]))
-                    return ':'.join('%02x' % b for b in info[18:24])
+                    return ":".join("%02x" % b for b in info[18:24])
                 except Exception:
                     continue
         except Exception as e:
             logger.error(f"Failed to get MAC address: {e}")
         return "00:00:00:00:00:00"
+
+    def to_ha_id(self):
+        """Convert a name to a Home Assistant compatible ID."""
+        return self.device_name.lower().replace(" ", "_").replace("-", "_")
 
     def on_message(self, msg: MQTTMessage): ...
 
@@ -227,20 +231,17 @@ class HAAutoDescovery(Handler):
             "effect": True,
             "supported_color_modes": ["rgb"],
             "dev": {
-                "ids": ["mqttsense"],
+                "ids": [self.get_mac_address()],
                 "name": self.device_name,
                 "manufacturer": "Raspberry Pi Foundation",
                 "model": "Sense HAT",
             },
-            "unique_id": self.get_mac_address(),
         }
         return json.dumps(config)
 
     def on_startup(self, client: Client, subscriber: Subscriber):
         logger.info("HAAutoDescovery initialized")
-        client.publish(
-            f"homeassistant/light/mqttsense/{self.get_mac_address()}/config", self.get_config(subscriber), retain=True
-        )
+        client.publish(f"homeassistant/light/mqttsense/{self.to_ha_id()}/config", self.get_config(subscriber), retain=True)
 
 
 class AnimationHandler(Handler):
