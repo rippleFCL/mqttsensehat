@@ -26,6 +26,6 @@ COPY --from=requirement-builder /usr/local/lib/python3.13/site-packages /usr/loc
 
 COPY mqttsense/ /app/mqttsense
 COPY main.py /app
-
+USER root
 
 ENTRYPOINT [ "python3", "main.py" ]
