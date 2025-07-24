@@ -18,7 +18,7 @@ class FillRainbowOffset:
 
 
 class CircleRainbowOffset:
-    def __init__(self, x_middle: float = 4.5, y_middle: float = 4.5, scale: float = 5):
+    def __init__(self, x_middle: float = 3.5, y_middle: float = 3.5, scale: float = 5):
         self.x_middle = x_middle
         self.y_middle = y_middle
         self.scale = scale

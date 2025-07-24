@@ -39,7 +39,7 @@ class CircleRainbowFast(CircleRainbow):
 
 class SpinningRainbow(Rainbow):
     def __init__(self, delay: float = 0.05):
-        super().__init__(get_offset=SpinRainbowOffset(1), delay=delay)
+        super().__init__(get_offset=SpinRainbowOffset(0.05), delay=delay)
 
 
 class SpinningRainbowFast(SpinningRainbow):
