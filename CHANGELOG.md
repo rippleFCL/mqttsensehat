@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.7] - 2025-07-24
+### :sparkles: New Features
+- [`04d5ffd`](https://github.com/rippleFCL/mqttsensehat/commit/04d5ffd1ce44d0b9d2e3e02a7450fcd1bfe55111) - better random rainbow *(commit by [@rippleFCL](https://github.com/rippleFCL))*
+
+
 ## [v1.6] - 2025-07-24
 ### :bug: Bug Fixes
 - [`81794ad`](https://github.com/rippleFCL/mqttsensehat/commit/81794ad9390e565516ae41c0702ad95d42c3e9da) - removed fill from random animation *(commit by [@rippleFCL](https://github.com/rippleFCL))*
@@ -73,3 +78,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v1.2.1]: https://github.com/rippleFCL/mqttsensehat/compare/v1.2...v1.2.1
 [v1.4]: https://github.com/rippleFCL/mqttsensehat/compare/v1.3...v1.4
 [v1.6]: https://github.com/rippleFCL/mqttsensehat/compare/v1.5...v1.6
+[v1.7]: https://github.com/rippleFCL/mqttsensehat/compare/v1.6...v1.7
