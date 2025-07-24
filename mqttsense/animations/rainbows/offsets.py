@@ -31,13 +31,16 @@ class CircleRainbowOffset:
 
 
 class SpinRainbowOffset:
-    def __init__(self, speed: float = 0.01):
+    def __init__(self, speed: float = 0.01, scale: float = 5):
         self.speed = speed
         self.angle = 0
+        self.scale = scale
 
     def __call__(self, x: int, y: int) -> float:
         # For SpinRainbow, we can return an offset based on the angle from the center
-        offset = x * cos(radians(self.angle)) + y * sin(radians(self.angle))
+        offset = (
+            x * cos(radians(self.angle)) + y * sin(radians(self.angle))
+        ) * self.scale
         self.angle += self.speed
         self.angle %= 360
         return offset
