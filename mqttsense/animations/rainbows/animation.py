@@ -52,22 +52,26 @@ class SpinningRainbowFast(SpinningRainbow):
 
 
 class RandomRainbow(Animation):
-    def __init__(self): ...
+    def __init__(self):
+        self.effects = [RollingRainbow(), SpinningRainbow(), CircleRainbow()]
+        self.start = random.randint(0, len(self.effects) - 1)
 
     def run(self) -> animation_return:
-        rand = random.choice([RollingRainbow(), SpinningRainbow(), CircleRainbow()])
-        return rand.run()
+        self.start += 1
+        self.start %= len(self.effects)
+        return self.effects[self.start].run()
 
 
 class RandomRainbowFast(Animation):
-    def __init__(self): ...
+    def __init__(self):
+        self.effects = [
+            RollingRainbowFast(),
+            SpinningRainbowFast(),
+            CircleRainbowFast(),
+        ]
+        self.start = random.randint(0, len(self.effects) - 1)
 
     def run(self) -> animation_return:
-        rand = random.choice(
-            [
-                RollingRainbowFast(),
-                SpinningRainbowFast(),
-                CircleRainbowFast(),
-            ]
-        )
-        return rand.run()
+        self.start += 1
+        self.start %= len(self.effects)
+        return self.effects[self.start].run()
