@@ -5,6 +5,8 @@ from paho.mqtt.client import Client, MQTTMessage
 
 from .animations import (
     AnimationController,
+    CircleRainbow,
+    CircleRainbowFast,
     FillColour,
     FillRainbow,
     FillRainbowFast,
@@ -12,6 +14,8 @@ from .animations import (
     FlashAnimationFast,
     RollingRainbow,
     RollingRainbowFast,
+    SpinningRainbow,
+    SpinningRainbowFast,
 )
 from .mqtt import Handler, Subscriber
 
@@ -141,6 +145,10 @@ class EffectHandler(Handler):
             "Rolling rainbow fast": RollingRainbowFast(),
             "Fill rainbow": FillRainbow(),
             "Fill rainbow fast": FillRainbowFast(),
+            "Spinning rainbow": SpinningRainbow(),
+            "Spinning rainbow fast": SpinningRainbowFast(),
+            "Circle rainbow": CircleRainbow(),
+            "Circle rainbow fast": CircleRainbowFast(),
         }
         self._colour_effects = {
             "Flash colour": FlashAnimation,

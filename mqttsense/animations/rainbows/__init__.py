@@ -1,10 +1,4 @@
 from .animation import (
-    FillColour,
-    FlashAnimation,
-    FlashAnimationFast,
-)
-from .controler import AnimationController
-from .rainbows import (
     CircleRainbow,
     CircleRainbowFast,
     FillRainbow,
@@ -16,14 +10,10 @@ from .rainbows import (
 )
 
 __all__ = [
-    "AnimationController",
     "CircleRainbow",
     "CircleRainbowFast",
-    "FillColour",
     "FillRainbow",
     "FillRainbowFast",
-    "FlashAnimation",
-    "FlashAnimationFast",
     "RollingRainbow",
     "RollingRainbowFast",
     "SpinningRainbow",

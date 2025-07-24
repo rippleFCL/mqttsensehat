@@ -3,7 +3,7 @@ from threading import Event, Thread
 
 from sense_hat import SenseHat
 
-from .animations import Animation
+from .animation import Animation
 from .drawables import Delay
 
 logger = logging.getLogger(__name__)
