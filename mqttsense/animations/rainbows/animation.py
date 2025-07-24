@@ -55,9 +55,7 @@ class RandomRainbow(Animation):
     def __init__(self): ...
 
     def run(self) -> animation_return:
-        rand = random.choice(
-            [FillRainbow(), RollingRainbow(), SpinningRainbow(), CircleRainbow()]
-        )
+        rand = random.choice([RollingRainbow(), SpinningRainbow(), CircleRainbow()])
         return rand.run()
 
 
@@ -67,7 +65,6 @@ class RandomRainbowFast(Animation):
     def run(self) -> animation_return:
         rand = random.choice(
             [
-                FillRainbowFast(),
                 RollingRainbowFast(),
                 SpinningRainbowFast(),
                 CircleRainbowFast(),
