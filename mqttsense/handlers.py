@@ -156,7 +156,7 @@ class EffectHandler(Handler):
         state = payload.get("state", self.state.state)
         brightness = payload.get("brightness", self.state.brightness)
         effect_name = payload.get("effect", None)
-        colour = payload.get("colour", None)
+        colour = payload.get("color", None)
         self.state.brightness = brightness
         self.state.state = state
 
