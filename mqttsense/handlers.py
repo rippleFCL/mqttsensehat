@@ -12,6 +12,8 @@ from .animations import (
     FillRainbowFast,
     FlashAnimation,
     FlashAnimationFast,
+    RandomRainbow,
+    RandomRainbowFast,
     RollingRainbow,
     RollingRainbowFast,
     SpinningRainbow,
@@ -149,6 +151,8 @@ class EffectHandler(Handler):
             "Spinning rainbow fast": SpinningRainbowFast(),
             "Circle rainbow": CircleRainbow(),
             "Circle rainbow fast": CircleRainbowFast(),
+            "Random rainbow": RandomRainbow(),
+            "Random rainbow fast": RandomRainbowFast(),
         }
         self._colour_effects = {
             "Flash colour": FlashAnimation,

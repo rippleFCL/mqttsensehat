@@ -31,7 +31,7 @@ class CircleRainbowOffset:
 
 
 class SpinRainbowOffset:
-    def __init__(self, speed: float = 1):
+    def __init__(self, speed: float = 0.01):
         self.speed = speed
         self.angle = 0
 
